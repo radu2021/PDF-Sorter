@@ -27,6 +27,7 @@ parser.add_argument(
 args = parser.parse_args()
 
 doc = pymupdf.open(str(args.file))
+doc_length = doc.page_count
 
 codes_dict = {}
 all_codes = []
@@ -124,5 +125,14 @@ def add_rotated_text_watermark(input_pdf, watermark_text):
 if args.watermark:
     add_rotated_text_watermark(args.file, "SORTED")
 
-print("Done!")
+counter = []
+for x in codes_dict:
+    for j in range(len(codes_dict[x])):
+        counter.append(codes_dict[x][j])
+
+if doc_length != len(set(counter)):
+    print("Discrepency between number of pages with tags and pages in the document, have you tagged all pages?")
+    print(str(len(set(counter))) + " pages with tags detected, " + str(doc_length) + " pages in the source document")
+else:
+    print("Done!")
 
